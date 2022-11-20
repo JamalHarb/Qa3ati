@@ -33,6 +33,9 @@ public class Hall {
 	@NotEmpty(message = "Hall name should be provided.")
 	private String name;
 	
+	@NotEmpty(message = "Adsress should be provided.")
+	private String address;
+	
 	@NotNull
 	@Min(value = 1, message = "Price must be greater than zero.")
 	private int basicPrice;
@@ -108,6 +111,12 @@ public class Hall {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	public int getBasicPrice() {
 		return basicPrice;
