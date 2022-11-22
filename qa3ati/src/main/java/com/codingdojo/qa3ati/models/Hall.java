@@ -23,6 +23,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="halls")
 public class Hall {
@@ -38,18 +40,18 @@ public class Hall {
 	
 	@NotNull
 	@Min(value = 1, message = "Price must be greater than zero.")
-	private int basicPrice;
+	private Integer basicPrice;
 	
 	@NotNull
 	@Min(value = 1, message = "capacity must be greater than zero.")
-	private int capacity;
+	private Integer capacity;
 	
 	@NotNull
 	private String description;
 	
 	@NotNull
 	private String phoneNumber;
-	
+		
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="creator_id")
 	private User creator;
@@ -62,6 +64,7 @@ public class Hall {
     		)
     private List<User> bookers;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "city_id")
 	private City city;
@@ -99,6 +102,15 @@ public class Hall {
 		
 	}
 	
+	public Hall(String name, String address, int basicPrice, int capacity, String description, String phoneNumber) {
+		this.name = name;
+		this.address = address;
+		this.basicPrice = basicPrice;
+		this.capacity = capacity;
+		this.description = description;
+		this.phoneNumber = phoneNumber;
+	}
+	
 //	Getters and Setters
 	public Long getId() {
 		return id;
@@ -118,16 +130,16 @@ public class Hall {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public int getBasicPrice() {
+	public Integer getBasicPrice() {
 		return basicPrice;
 	}
-	public void setBasicPrice(int basicPrice) {
+	public void setBasicPrice(Integer basicPrice) {
 		this.basicPrice = basicPrice;
 	}
-	public int getCapacity() {
+	public Integer getCapacity() {
 		return capacity;
 	}
-	public void setCapacity(int capacity) {
+	public void setCapacity(Integer capacity) {
 		this.capacity = capacity;
 	}
 	public String getDescription() {

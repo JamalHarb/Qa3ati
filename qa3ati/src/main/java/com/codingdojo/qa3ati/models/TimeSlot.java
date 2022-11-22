@@ -27,18 +27,18 @@ public class TimeSlot {
     private Long id;
 	
 	@NotNull
-	private int from;
+	private Integer fromHour;
 	
 	@NotNull
-	private int to;
+	private Integer toHour;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-			name = "dates_times",
-			joinColumns = @JoinColumn(name = "time_slot_id"),
-			inverseJoinColumns = @JoinColumn(name = "reserve_date_id")
-			)
-	private List<ReserveDate> reserveDates;
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(
+//			name = "dates_times",
+//			joinColumns = @JoinColumn(name = "time_slot_id"),
+//			inverseJoinColumns = @JoinColumn(name = "reserve_date_id")
+//			)
+//	private List<ReserveDate> dates;
 	
 	@Column(updatable=false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
@@ -64,17 +64,17 @@ public class TimeSlot {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public int getFrom() {
-		return from;
+	public Integer getFromHour() {
+		return fromHour;
 	}
-	public void setFrom(int from) {
-		this.from = from;
+	public void setFromHour(Integer fromHour) {
+		this.fromHour = fromHour;
 	}
-	public int getTo() {
-		return to;
+	public Integer getToHour() {
+		return toHour;
 	}
-	public void setTo(int to) {
-		this.to = to;
+	public void setToHour(Integer toHour) {
+		this.toHour = toHour;
 	}
 	public Date getCreatedAt() {
 		return createdAt;
@@ -88,5 +88,11 @@ public class TimeSlot {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-    
+//	public List<ReserveDate> getDates() {
+//		return dates;
+//	}
+//	public void setDates(List<ReserveDate> dates) {
+//		this.dates = dates;
+//	}
+	
 }

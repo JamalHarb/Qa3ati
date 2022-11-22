@@ -17,6 +17,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="cities")
 public class City {
@@ -27,6 +29,7 @@ public class City {
 	@NotNull
 	private String cityName;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="city", fetch=FetchType.LAZY)
 	private List<Hall> halls;
 	
@@ -47,6 +50,10 @@ public class City {
 //    Constructor
 	public City() {
 		
+	}
+	
+	public City(String name) {
+		this.cityName = name;
 	}
 	
 //	Getters and Setters
