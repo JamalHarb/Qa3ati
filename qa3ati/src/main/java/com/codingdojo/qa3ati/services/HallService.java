@@ -1,5 +1,6 @@
 package com.codingdojo.qa3ati.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,12 @@ public class HallService {
 			Integer maxPrice,
 			Integer minCapacity,
 			Integer maxCapacity) {
-		return hallRepo.findHallByQuery(cityName, minPrice, maxPrice, minCapacity, maxCapacity);
+		return hallRepo.findHallByQuery(
+				cityName,
+				minPrice,
+				maxPrice,
+				minCapacity,
+				maxCapacity);
 	}
 	
 	public Hall findHallById(Long id) {

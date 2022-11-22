@@ -23,6 +23,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="users")
 public class User {
@@ -47,9 +49,15 @@ public class User {
     @Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
     private String confirm;
     
+    @JsonIgnore
     @OneToMany(mappedBy="creator", fetch=FetchType.LAZY)
     private List<Hall> createdHalls;
     
+    @JsonIgnore
+    @OneToMany(mappedBy="booker", fetch=FetchType.LAZY)
+    private List<ReserveDate> reservedDates;
+    
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
     		name = "users_booked_halls",
@@ -138,6 +146,12 @@ public class User {
 	}
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+	public List<ReserveDate> getReservedDates() {
+		return reservedDates;
+	}
+	public void setReservedDates(List<ReserveDate> reservedDates) {
+		this.reservedDates = reservedDates;
 	}
 	
 }

@@ -16,6 +16,8 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "halls_dates")
 public class HallDate {
@@ -23,10 +25,12 @@ public class HallDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hall_id")
 	private Hall hall;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "reserve_date_id")
 	private ReserveDate reserveDate;

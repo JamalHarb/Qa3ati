@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -21,6 +22,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "dates")
 public class ReserveDate {
@@ -28,14 +31,14 @@ public class ReserveDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NotNull
-	private int day = 1;
-	
-	@NotNull
-	private String month = "Jan";
-	
-	@NotNull
-	private int year = 2022;
+//	@NotNull
+//	private int day = 1;
+//	
+//	@NotNull
+//	private String month = "Jan";
+//	
+//	@NotNull
+//	private int year = 2022;
 
 	@NotNull
 	@Temporal(TemporalType.DATE)
@@ -48,6 +51,15 @@ public class ReserveDate {
 	@NotNull
 	private Integer toHour;
 	
+	@NotNull
+	private boolean isAvailable = true;
+	
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "booker_id")
+	private User booker;
+	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 			name = "halls_dates",
@@ -55,15 +67,7 @@ public class ReserveDate {
 			inverseJoinColumns = @JoinColumn(name = "hall_id")
 			)
 	private List<Hall> halls;
-	
-//	@ManyToMany(fetch = FetchType.LAZY)
-//	@JoinTable(
-//			name = "dates_times",
-//			joinColumns = @JoinColumn(name = "reserve_date_id"),
-//			inverseJoinColumns = @JoinColumn(name = "time_slot_id")
-//			)
-//	private List<TimeSlot> timeSlots;
-		
+			
 	@Column(updatable=false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date createdAt;
@@ -147,6 +151,18 @@ public class ReserveDate {
 	}
 	public void setToHour(Integer toHour) {
 		this.toHour = toHour;
+	}
+	public boolean getIsAvailable() {
+		return isAvailable;
+	}
+	public void setAvailable(boolean isAvailable) {
+		this.isAvailable = isAvailable;
+	}
+	public User getBooker() {
+		return booker;
+	}
+	public void setBooker(User booker) {
+		this.booker = booker;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.codingdojo.qa3ati.controllers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +23,11 @@ public class AppRestController {
 		this.cityService = cityService;
 	}
 	
-//	@PostMapping("/cities/new")
-//	public City newCity(@RequestParam(value="name") String name) {
-//		City city = new City(name);
-//		return cityService.createCity(city);
-//	}
+	@PostMapping("/cities/new")
+	public City newCity(@RequestParam(value="name") String name) {
+		City city = new City(name);
+		return cityService.createCity(city);
+	}
 //	
 //	@GetMapping("/halls")
 //	public List<Hall> allHalls() {
@@ -49,14 +50,19 @@ public class AppRestController {
 //		return hallService.createHall(hall);
 //	}
 //	
-//	@GetMapping("/halls/search")
-//	public List<Hall> searchHall(
-//			@RequestParam(value="cityName", required = false) String cityName,
-//			@RequestParam(value="minPrice", required = false) Integer minPrice,
-//			@RequestParam(value="maxPrice", required = false) Integer maxPrice,
-//			@RequestParam(value="minCapacity", required = false) Integer minCapacity,
-//			@RequestParam(value="maxCapacity", required = false) Integer maxCapacity) {
-//		return hallService.findHallByQuery(cityName, minPrice, maxPrice, minCapacity, maxCapacity);
-//	}
+	@GetMapping("/halls/search")
+	public List<Hall> searchHall(
+			@RequestParam(value="cityName", required = false) String cityName,
+			@RequestParam(value="minPrice", required = false) Integer minPrice,
+			@RequestParam(value="maxPrice", required = false) Integer maxPrice,
+			@RequestParam(value="minCapacity", required = false) Integer minCapacity,
+			@RequestParam(value="maxCapacity", required = false) Integer maxCapacity) {
+		return hallService.findHallByQuery(
+				cityName,
+				minPrice,
+				maxPrice,
+				minCapacity,
+				maxCapacity);
+	}
 	
 }

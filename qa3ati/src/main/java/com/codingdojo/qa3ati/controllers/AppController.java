@@ -117,22 +117,53 @@ public class AppController {
 		return "display_hall.jsp";
 	}
 	
-	@PostMapping("/halls/{id}/add_availability")
+	@PostMapping("/halls/{hallId}/add_availability")
 	public String addAvailability(
-			@PathVariable("id") Long id,
+			@PathVariable("hallId") Long hallId,
 			@ModelAttribute("reserveDate") ReserveDate reserveDate) {
 		System.out.println("method entered");
 		ReserveDate date = reserveDateService.createReserveDate(reserveDate);
 		System.out.println("date created");
-		Hall hall = hallService.findHallById(id);
+		System.out.println("id" + date.getId());
+		Hall hall = hallService.findHallById(hallId);
 		hall.getReserveDates().add(date);
 		hallService.updateHall(hall);
-		return "redirect:/halls/{id}";
+		return "redirect:/halls/{hallId}";
 	}
 	
 	@GetMapping("/halls/{id}/delete")
 	public String deleteHall(@PathVariable("id") Long id) {
 		hallService.deleteHall(id);
 		return "redirect:/halls";
+	}
+	
+	@GetMapping("/halls/hall{hallId}/date{dateId}/book")
+	public String bookHall(
+			@PathVariable("hallId") Long hallId,
+			@PathVariable("dateId") Long dateId,
+			HttpSession session) {
+		ReserveDate date = reserveDateService.findReserveDateById(dateId);
+		Hall hall = hallService.findHallById(hallId);
+		User booker = (User) session.getAttribute("user");
+		date.setAvailable(false);
+		date.setBooker(booker);
+		hall.getBookers().add(booker);
+		hallService.updateHall(hall);
+		return "redirect:/halls/{hallId}";
+	}
+	
+	@GetMapping("/halls/hall{hallId}/date{dateId}/unbook")
+	public String unbookHall(
+			@PathVariable("hallId") Long hallId,
+			@PathVariable("dateId") Long dateId,
+			HttpSession session) {
+		ReserveDate date = reserveDateService.findReserveDateById(dateId);
+		Hall hall = hallService.findHallById(hallId);
+		User booker = (User) session.getAttribute("user");
+		date.setAvailable(true);
+		date.setBooker(null);
+		hall.getBookers().remove(booker);
+		hallService.updateHall(hall);
+		return "redirect:/halls/{hallId}";
 	}
 }

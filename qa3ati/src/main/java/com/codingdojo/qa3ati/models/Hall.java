@@ -51,11 +51,13 @@ public class Hall {
 	
 	@NotNull
 	private String phoneNumber;
-		
+	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="creator_id")
 	private User creator;
 	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
     		name = "users_booked_halls",
@@ -75,6 +77,7 @@ public class Hall {
 	@OneToMany(mappedBy = "hall", fetch = FetchType.LAZY)
 	private List<Photo> photos;
 	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 			name = "halls_dates",

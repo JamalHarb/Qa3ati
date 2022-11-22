@@ -9,6 +9,7 @@
 </head>
 <body>
     <h1>Welcome, ${user.userName}</h1>
+    <p><a href="/logout">logout</a></p>
     <p><a href="/halls/new">+ add a hall</a></p>
     <table border="2px">
         <thead>
@@ -29,7 +30,9 @@
                     <td><c:out value="${hall.capacity}"></c:out></td>
                     <td><c:out value="${hall.address}"></c:out></td>
                     <td><c:out value="${hall.city.cityName}"></c:out></td>
-                    <td><a href="/halls/${hall.id}/delete">delete</a></td>
+                    <c:if test="${user.id == hall.creator.id}">
+                        <td><a href="/halls/${hall.id}/delete">delete</a></td>
+                    </c:if>
                 </tr>
             </c:forEach>
         </tbody>
