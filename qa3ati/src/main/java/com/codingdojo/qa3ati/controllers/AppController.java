@@ -16,26 +16,30 @@ import com.codingdojo.qa3ati.models.LoginUser;
 import com.codingdojo.qa3ati.models.ReserveDate;
 import com.codingdojo.qa3ati.models.User;
 import com.codingdojo.qa3ati.services.CityService;
+import com.codingdojo.qa3ati.services.EmailSender;
 import com.codingdojo.qa3ati.services.HallService;
 import com.codingdojo.qa3ati.services.ReserveDateService;
 import com.codingdojo.qa3ati.services.UserService;
 
 @Controller
 public class AppController {
-	private final HallService hallService;
 	private final CityService cityService;
-	private final UserService userService;
+	private final EmailSender emailSender;
+	private final HallService hallService;
 	private final ReserveDateService reserveDateService;
+	private final UserService userService;
 	
 	public AppController(
-			HallService hallService,
 			CityService cityService,
-			UserService userService,
-			ReserveDateService reserveDateService) {
-		this.hallService = hallService;
+			EmailSender emailSender,
+			HallService hallService,
+			ReserveDateService reserveDateService,
+			UserService userService) {
 		this.cityService = cityService;
-		this.userService = userService;
+		this.emailSender = emailSender;
+		this.hallService = hallService;
 		this.reserveDateService = reserveDateService;
+		this.userService = userService;
 	}
 	
 	@GetMapping("")
@@ -82,13 +86,19 @@ public class AppController {
     }
 	
 	@GetMapping("/halls")
-	public String halls(Model model) {
+	public String halls(Model model, HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
 		model.addAttribute("halls", hallService.allHalls());
 		return "all_halls.jsp";
 	}
 	
 	@GetMapping("/halls/new")
-	public String newHall(Model model, @ModelAttribute("hall") Hall hall) {
+	public String newHall(Model model, @ModelAttribute("hall") Hall hall, HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
 		model.addAttribute("cities", cityService.allCities());
 		return "new_hall.jsp";
 	}
@@ -112,7 +122,11 @@ public class AppController {
 	public String displayHall(
 			@PathVariable("id") Long id,
 			Model model,
-			@ModelAttribute("reserveDate") ReserveDate reserveDate) {
+			@ModelAttribute("reserveDate") ReserveDate reserveDate,
+			HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
 		model.addAttribute("hall", hallService.findHallById(id));
 		return "display_hall.jsp";
 	}
@@ -120,7 +134,11 @@ public class AppController {
 	@PostMapping("/halls/{hallId}/add_availability")
 	public String addAvailability(
 			@PathVariable("hallId") Long hallId,
-			@ModelAttribute("reserveDate") ReserveDate reserveDate) {
+			@ModelAttribute("reserveDate") ReserveDate reserveDate,
+			HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
 		System.out.println("method entered");
 		ReserveDate date = reserveDateService.createReserveDate(reserveDate);
 		System.out.println("date created");
@@ -132,7 +150,12 @@ public class AppController {
 	}
 	
 	@GetMapping("/halls/{id}/delete")
-	public String deleteHall(@PathVariable("id") Long id) {
+	public String deleteHall(@PathVariable("id") Long id, HttpSession session) {
+		Hall hall = hallService.findHallById(id);
+		User user = (User) session.getAttribute("user");
+		if(session.getAttribute("user") == null || hall.getCreator().getId() != user.getId()) {
+			return "redirect:/";
+		}
 		hallService.deleteHall(id);
 		return "redirect:/halls";
 	}
@@ -149,6 +172,8 @@ public class AppController {
 		date.setBooker(booker);
 		hall.getBookers().add(booker);
 		hallService.updateHall(hall);
+		String msg = "Hello " + hall.getCreator().getUserName() + ". " + booker.getUserName() + " reserved " + hall.getName() + " on " + date.getDate().toString() + ", from " + date.getFromHour().toString() + " to " + date.getToHour().toString();
+		emailSender.sendEmail(hall.getCreator().getEmail(), "Your Hall Has Been Reserved", msg);
 		return "redirect:/halls/{hallId}";
 	}
 	
@@ -164,6 +189,8 @@ public class AppController {
 		date.setBooker(null);
 		hall.getBookers().remove(booker);
 		hallService.updateHall(hall);
+		String msg = "Hello " + hall.getCreator().getUserName() + ". " + booker.getUserName() + " cancelled reservation for " + hall.getName() + " on " + date.getDate().toString() + ", from " + date.getFromHour().toString() + " to " + date.getToHour().toString();
+		emailSender.sendEmail(hall.getCreator().getEmail(), "Your Hall Reservation Has Been Cancelled", msg);
 		return "redirect:/halls/{hallId}";
 	}
 }

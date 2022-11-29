@@ -31,15 +31,6 @@ public class ReserveDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-//	@NotNull
-//	private int day = 1;
-//	
-//	@NotNull
-//	private String month = "Jan";
-//	
-//	@NotNull
-//	private int year = 2022;
-
 	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
@@ -92,24 +83,6 @@ public class ReserveDate {
 	public void setId(Long id) {
 		this.id = id;
 	}
-//	public int getDay() {
-//		return day;
-//	}
-//	public void setDay(int day) {
-//		this.day = day;
-//	}
-//	public String getMonth() {
-//		return month;
-//	}
-//	public void setMonth(String month) {
-//		this.month = month;
-//	}
-//	public int getYear() {
-//		return year;
-//	}
-//	public void setYear(int year) {
-//		this.year = year;
-//	}
 	public List<Hall> getHalls() {
 		return halls;
 	}
@@ -134,12 +107,6 @@ public class ReserveDate {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-//	public List<TimeSlot> getTimeSlots() {
-//		return timeSlots;
-//	}
-//	public void setTimeSlots(List<TimeSlot> timeSlots) {
-//		this.timeSlots = timeSlots;
-//	}
 	public Integer getFromHour() {
 		return fromHour;
 	}
